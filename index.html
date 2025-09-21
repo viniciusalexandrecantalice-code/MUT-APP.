@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>MUT APP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fafafa;
+      cursor: url('https://i.ibb.co/mhB8X0p/cursor-bolinha.png'), auto;
+      display: flex;
+      justify-content: center;
+    }
+    #container {
+      width: 550px;
+      background: #fff;
+      border-radius: 20px;
+      margin: 20px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      transition: 0.3s;
+    }
+    h1,h2,h3 { text-align: center; color: #262626; }
+    input,select,textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 8px;
+      border: 1px solid #dbdbdb;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: 0.2s;
+    }
+    input:focus,select:focus,textarea:focus {
+      border-color: #3897f0;
+      outline: none;
+    }
+    textarea { resize: none; }
+    button {
+      background: #3897f0;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 5px 0;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover { background: #2a76c7; transform: scale(1.03); }
+    #perfil {
+      text-align: center;
+      padding: 20px;
+      border-bottom: 1px solid #dbdbdb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #perfil img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 2px solid #3897f0;
+      margin-bottom: 10px;
+      transition: 0.3s;
+    }
+    #perfil img:hover { transform: scale(1.1); }
+    #perfil h2 { margin: 5px 0; font-size: 22px; }
+    .verificado { color: #1da1f2; margin-left: 5px; }
+    .hidden { display: none; }
+    #friends,#chat,#meusPosts,#criarPost,#feed,#admin {
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      background: #f9f9f9;
+      position: relative;
+    }
+    .friend-item {
+      display: flex;
+      align-items: center;
+      background: #fafafa;
+      margin: 5px 0;
+      padding: 5px 10px;
+      border-radius: 12px;
+      border: 1px solid #dbdbdb;
+      transition: 0.2s;
+    }
+    .friend-item:hover { background: #f0f0f0; transform: scale(1.02); }
+    .friend-item img { width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; }
+    #mensagens {
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      scroll-behavior: smooth;
+    }
+    .msg { padding: 8px 12px; margin: 5px 0; border-radius: 15px; max-width: 80%; word-wrap: break-word; color: #262626; transition: 0.2s; }
+    .msg.you { background: #d6f0ff; align-self: flex-end; }
+    .msg.friend { background: #f0f0f0; align-self: flex-start; color: #0077ff; }
+    .post {
+      background: #fff;
+      margin: 12px 0;
+      border-radius: 12px;
+      border: 1px solid #dbdbdb;
+      transition: 0.2s;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .post:hover { transform: scale(1.02); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .post-header { display: flex; align-items: center; padding: 10px; }
+    .post-header img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; }
+    .post-content img { max-width: 100%; }
+    .post-content p { padding: 0 10px 10px 10px; cursor: pointer; }
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px 10px 10px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .main-buttons button { width: 48%; margin: 5px 1%; }
+    .closeBtn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ff4d4d;
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    .closeBtn:hover { background: #cc0000; }
+    #logo { text-align: center; margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="logo">
+      <h1>🌐 MUT APP</h1>
+    </div>
+
+    <div id="perfil">
+      <img src="https://i.ibb.co/7JfqXxB/avatar.png" alt="Avatar">
+      <h2>Usuário <span class="verificado">✔</span></h2>
+    </div>
+
+    <div id="friends">
+      <button onclick="toggleSection('friendsList')">👥 Amigos</button>
+      <div id="friendsList" class="hidden"></div>
+    </div>
+
+    <div id="chat">
+      <button onclick="toggleSection('chatBox')">💬 Chat</button>
+      <div id="chatBox" class="hidden">
+        <div id="mensagens"></div>
+        <input type="text" id="msgInput" placeholder="Digite uma mensagem...">
+        <button onclick="enviarMsg()">Enviar</button>
+      </div>
+    </div>
+
+    <div id="criarPost">
+      <button onclick="toggleSection('novoPost')">➕ Criar Post</button>
+      <div id="novoPost" class="hidden">
+        <textarea id="postTexto" rows="3" placeholder="Escreva algo..."></textarea>
+        <input type="text" id="postImg" placeholder="URL da imagem (opcional)">
+        <button onclick="criarPost()">Publicar</button>
+      </div>
+    </div>
+
+    <div id="feed">
+      <h3>📢 Feed</h3>
+      <div id="postagens"></div>
+    </div>
+  </div>
+
+  <script>
+    function toggleSection(id) {
+      document.getElementById(id).classList.toggle("hidden");
+    }
+
+    function enviarMsg() {
+      const input = document.getElementById("msgInput");
+      const texto = input.value.trim();
+      if (!texto) return;
+      const div = document.createElement("div");
+      div.className = "msg you";
+      div.textContent = texto;
+      document.getElementById("mensagens").appendChild(div);
+      input.value = "";
+      setTimeout(() => {
+        const resp = document.createElement("div");
+        resp.className = "msg friend";
+        resp.textContent = "✔ Mensagem recebida!";
+        document.getElementById("mensagens").appendChild(resp);
+      }, 1000);
+    }
+
+    function criarPost() {
+      const texto = document.getElementById("postTexto").value.trim();
+      const img = document.getElementById("postImg").value.trim();
+      if (!texto && !img) return;
+      const post = document.createElement("div");
+      post.className = "post";
+      post.innerHTML = `
+        <div class="post-header">
+          <img src="https://i.ibb.co/7JfqXxB/avatar.png">
+          <b>Usuário</b>
+        </div>
+        <div class="post-content">
+          ${img ? `<img src="${img}">` : ""}
+          ${texto ? `<p>${texto}</p>` : ""}
+        </div>
+        <div class="post-footer">
+          <button>👍 Curtir</button>
+          <button>💬 Comentar</button>
+        </div>
+      `;
+      document.getElementById("postagens").prepend(post);
+      document.getElementById("postTexto").value = "";
+      document.getElementById("postImg").value = "";
+    }
+  </script>
+</body>
+</html>
